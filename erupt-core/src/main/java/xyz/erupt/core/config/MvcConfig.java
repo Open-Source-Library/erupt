@@ -37,9 +37,13 @@ public class MvcConfig {
                 .setLongSerializationPolicy(LongSerializationPolicy.STRING).setExclusionStrategies(new GsonExclusionStrategies())
                 .serializeNulls().create();
         Collection<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(new GsonHttpMessageConverter() {{
-            this.setGson(gson);
-        }});
+        messageConverters.add(new GsonHttpMessageConverter(gson) {
+            // 兼容magic-api，由于gson不走setter，所以配置magic-api包下的类不走gson转换，走默认的jackson。
+            @Override
+            protected boolean supports(Class<?> clazz) {
+                return !clazz.getName().startsWith("org.ssssssss.") && super.supports(clazz);
+            }
+        });
         return new HttpMessageConverters(true, messageConverters);
     }
 
