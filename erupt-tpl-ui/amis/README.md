@@ -2,4 +2,4 @@
 
 网址：https://baidu.gitee.io/amis/zh-CN/docs/index
 
-版本：1.1.4
+版本：1.1.6
