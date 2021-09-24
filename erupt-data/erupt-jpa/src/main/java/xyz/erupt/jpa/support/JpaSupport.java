@@ -1,15 +1,19 @@
 package xyz.erupt.jpa.support;
 
-import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
-import xyz.erupt.annotation.EruptField;
-import xyz.erupt.annotation.sub_field.EditType;
-import xyz.erupt.core.util.ReflectUtil;
-import xyz.erupt.jpa.dao.EruptDao;
+import java.lang.reflect.Field;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
 import javax.persistence.JoinColumn;
-import java.lang.reflect.Field;
+
+import org.springframework.stereotype.Component;
+
+import lombok.SneakyThrows;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.EditType;
+import xyz.erupt.core.annotation.EruptDataSource;
+import xyz.erupt.core.util.ReflectUtil;
+import xyz.erupt.jpa.dao.EruptDao;
 
 @Component
 public class JpaSupport {
@@ -39,8 +43,12 @@ public class JpaSupport {
                 if (null != refObject) {
                     Field idField = ReflectUtil.findClassField(refObject.getClass(), id);
                     idField.setAccessible(true);
-                    Object result = eruptDao.getEntityManager()
-                            .createQuery("from " + refObject.getClass().getSimpleName() + " I where I.id = :id")
+                    EntityManager em = eruptDao.getEntityManager();
+                    EruptDataSource eruptDataSource = refObject.getClass().getAnnotation(EruptDataSource.class);
+                    if(eruptDataSource != null) {
+                    	em = eruptDao.getEntityManager(eruptDataSource.value());
+                    }
+                    Object result = em.createQuery("from " + refObject.getClass().getSimpleName() + " I where I.id = :id")
                             .setParameter("id", idField.get(refObject)).getSingleResult();
                     field.set(obj, result);
                 }
