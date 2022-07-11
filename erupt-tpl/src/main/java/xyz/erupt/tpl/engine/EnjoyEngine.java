@@ -23,6 +23,7 @@ public class EnjoyEngine extends EngineTemplate<Engine> {
         Engine eng = new Engine();
         eng.addSharedMethod(StrKit.class);
         eng.setDevMode(true);
+        eng.setToClassPathSourceFactory();
         return eng;
     }
 
