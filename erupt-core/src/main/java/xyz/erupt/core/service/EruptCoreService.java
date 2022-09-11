@@ -92,7 +92,11 @@ public class EruptCoreService implements ApplicationRunner {
                 .ifPresent(ignore -> {
                     EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
                     eruptModel.getEruptFieldModels().add(eruptFieldModel);
+                    if(eruptModel.getEruptFieldMap().containsKey(field.getName())){
+
+                    }else{
                     eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
+                    }
                 }));
         eruptModel.getEruptFieldModels().sort(Comparator.comparingInt((a) -> a.getEruptField().sort()));
         // erupt annotation validate
