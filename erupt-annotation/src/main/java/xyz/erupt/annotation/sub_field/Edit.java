@@ -52,6 +52,9 @@ public @interface Edit {
     @Comment("组件类型")
     EditType type() default EditType.AUTO;
 
+    @Comment("联动")
+    AffectedBy affectedBy() default @AffectedBy(expression = "",byField = "");
+
     @Match("#item.type().toString()=='INPUT'")
     InputType inputType() default @InputType;
 
