@@ -1,6 +1,6 @@
 <template>
   <div style="text-align: center">
-    <h4 v-if="loginUser">{{'当前登陆人 ' + loginUser}}</h4>
+    <h4 v-if="loginUser">{{'当前登录用户 ' + loginUser}}</h4>
     <h4 v-else>请先登录 😅</h4>
 
     <div class="work-panel">
@@ -51,10 +51,6 @@ export default {
     }
   },
   mounted(){
-    getLoginInfo().then( res=> {
-      this.loginUser = res.nickname;
-      this.select.push({id: res.nickname, name: res.nickname, type: 'user'})
-    });
     // let user = sessionStorage.getItem("user")
     // if (user !== null && user !== ''){
     //   this.loginUser = JSON.parse(user)

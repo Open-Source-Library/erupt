@@ -9,7 +9,7 @@
 
     </div>
     <div v-else>
-      <el-input-number style="width: 100%;" :min="min || 0" :max="max" controls-position="right" :precision="precision" size="medium" :disabled="formDisable" clearable v-model="_value" :placeholder="placeholder"/>
+      <el-input-number style="width: 100%;" controls-position="right" :precision="precision" size="medium" :disabled="!editable" clearable v-model="_nvalue" :placeholder="placeholder"/>
       <div v-show="showChinese">
         <span>大写：</span>
         <span class="chinese">{{chinese}}</span>
@@ -31,7 +31,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请输入金额'
+      default: '请输入'
     },
     showChinese: {
       type: Boolean,
@@ -39,10 +39,18 @@ export default {
     },
     precision: {
       type: Number,
-      default: 0
-    }
+      default: 2
+    },
   },
   computed:{
+    _nvalue: {
+      get() {
+        return Number(this.value);
+      },
+      set(val) {
+        this.$emit("input", val);
+      }
+    },
     chinese(){
       return this.convertCurrency(this.value)
     },
