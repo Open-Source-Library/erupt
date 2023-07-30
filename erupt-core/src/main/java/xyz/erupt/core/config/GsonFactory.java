@@ -3,9 +3,11 @@ package xyz.erupt.core.config;
 import com.google.gson.*;
 import xyz.erupt.core.util.DateUtil;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 /**
  * @author YuePeng
@@ -22,6 +24,7 @@ public class GsonFactory {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
+            .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
             .setLongSerializationPolicy(LongSerializationPolicy.STRING)
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
 
@@ -36,5 +39,14 @@ public class GsonFactory {
     }
 
     private GsonFactory() {
+    }
+
+    static class TimeZoneSerializer implements com.google.gson.JsonSerializer<TimeZone> {
+        @Override
+        public JsonObject serialize(TimeZone src, Type typeOfSrc, com.google.gson.JsonSerializationContext context) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", src.getID());
+            return jsonObject;
+        }
     }
 }
