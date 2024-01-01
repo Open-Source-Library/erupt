@@ -3,6 +3,7 @@ package xyz.erupt.core.config;
 import com.google.gson.*;
 import xyz.erupt.core.util.DateUtil;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
