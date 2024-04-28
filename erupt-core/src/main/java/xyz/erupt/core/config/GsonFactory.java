@@ -1,6 +1,7 @@
 package xyz.erupt.core.config;
 
 import com.google.gson.*;
+import lombok.Getter;
 import xyz.erupt.core.util.DateUtil;
 
 import java.lang.reflect.Type;
@@ -16,6 +17,7 @@ import java.util.TimeZone;
  */
 public class GsonFactory {
 
+    @Getter
     private final static GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(DateUtil.DATE_TIME)
             .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context)
                     -> new JsonPrimitive(src.format(DateTimeFormatter.ofPattern(DateUtil.DATE_TIME))))
@@ -31,15 +33,8 @@ public class GsonFactory {
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
 
+    @Getter
     private static final Gson gson = gsonBuilder.create();
-
-    public static Gson getGson() {
-        return gson;
-    }
-
-    public static GsonBuilder getGsonBuilder() {
-        return gsonBuilder;
-    }
 
     private GsonFactory() {
     }
