@@ -54,6 +54,9 @@ public @interface Erupt {
     @Comment("数据行为代理接口，对增、删、改、查等行为做逻辑处理")
     Class<? extends DataProxy<?>>[] dataProxy() default {};
 
+    @Comment("此值可在dataProxy内被DataProxyContext.get()方法中获取到")
+    String[] dataProxyParams() default {};
+
     @Comment("树视图配置")
     Tree tree() default @Tree;
 
@@ -64,10 +67,6 @@ public @interface Erupt {
     //布局配置
     Layout layout() default @Layout;
 
-//    @Comment("自定义页头")
-//    @Match("#value.path() != ''")
-//    Tpl header() default @Tpl(path = "");
-//
 //    @Comment("画册视图定义")
 //    @Match("#value.enable() == true")
 //    Card cardView() default @Card(enable = false, galleryField = "", viewFields = {});

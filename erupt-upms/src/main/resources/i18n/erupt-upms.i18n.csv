@@ -8,6 +8,7 @@ upms.position_no_org,选择岗位时，所属组织必填,選擇崗位時，所�
 [erupt],,,,,,,,
 编码,编码,編碼,Code,codage,コード化です,인 코딩,закодирова,codificación
 名称,名称,名稱,Title,dénomination,名前です,이름,назван,El nombre
+值,值,值,value,valeur,値,값,значение,valore
 备注,备注,備註,Remark,remarques,備考です,비고,примечан,comentar
 用户名,用户名,用戶名,Account,Nom de l’utilisateur,ユーザー名です,사용자 이름,Имя пользователя.,Nombre de usuario
 姓名,姓名,姓名,Name,Le nom,名前です,이름,им,Los nombres
@@ -84,6 +85,12 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 [menu],,,,,,,,
 首页,首页,首頁,Home,La maison,トップページです,첫 페이지,Главн страниц,En la primera página
 系统管理,系统管理,系統管理,System management,Gestion du système,システム管理です,시스템 관리,Управление системой,Administración del sistema
+菜单管理,菜单管理,菜單管理,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú
+角色管理,角色管理,角色管理,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles
+组织管理,组织管理,組織管理,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento
+岗位管理,岗位管理,崗位管理,Post maintenance,Maintien des postes,雇用維持です,직무 유지,Уход за постом,Mantenimiento del puesto
+用户管理,用户管理,用戶管理,User maintenance,Maintenance des utilisateurs,ユーザーメンテナンス,사용자 보호,Обслуживание пользователя,Mantenimiento por usuarios
+数据字典,数据字典,數據字典,Dictionary maintenance,Maintenance du dictionnaire,辞書メンテナンスです,사전 관리,Уход за словарем,Mantenimiento del diccionario
 菜单维护,菜单维护,菜單維護,Menu maintenance,Maintenance du menu,メニューメンテナンスです,메뉴 관리,Обслуживание меню,Mantenimiento del menú
 角色维护,角色维护,角色維護,Role maintenance,Maintien des rôles,キャラクターメンテナンスです,역할 관리,Уход за персонажами,Mantenimiento de roles
 组织维护,组织维护,組織維護,Organization maintenance,Organisation et maintenance,メンテナンス組織です,조직 유지,Организационное обслуживание,Organización y mantenimiento
@@ -93,6 +100,10 @@ IP来源,IP来源,IP來源,Op source,Origine de IP,IPソースです,ip 소스,I
 登录日志,登录日志,登錄日誌,Entry log,Log de connexion,ログを登録する,로그인 로그,Регистрационный журнал.,Iniciar sesión log
 在线用户,在线用户,在線用戶,Online user,Utilisateurs en ligne,オンラインユーザーです,온라인 사용자,Онлайн.,Usuarios en línea
 操作日志,操作日志,操作日誌,Operation log,Journal des opérations,操作履歴です,작업 로그,Журнал операций.,Registro de operaciones
+系统日志,系统日志,系統日誌,System Log,Journal système,システム ログ,시스템 로그,Системный журнал,Registro di sistema
 代码生成,代码生成,代碼生成,Code generation,Génération de code,コード生成です,코드 생성,Генерация кода,Generación de código
 生成Erupt代码,生成Erupt代码,生成Erupt代碼,Erupt code is generated,Générer du code Erupt,Eruptコードを生成します,erupt 코드를 생성한다,Генерирует код эрупта,Generando código Erupt
-,,,,,,,,
+更新秘钥,更新秘钥,更新密鑰,Update secret key,Mettre à jour la clé secrète,更新キー,업데이트 키,Обновление секретного ключа,Aggiornamento della chiave segreta
+Token有效期,Token 有效期,Token 有效期,Token validity period,Période de validité du token,トークン有効期間,토큰 유효 기간,Срок действия токена,Periodo di validità del token
+绑定用户权限,绑定用户权限,綁定用戶權限,Bind user permissions,Lier les autorisations d'utilisateur,ユーザー権限のバインド,사용자 권한 바인딩,Привязка прав пользователя,Vincolare i permessi dell'utente
+秘钥,秘钥,密鑰,Secret key,Clé secrète,秘密鍵,비밀 키,Секретный ключ,Chiave segreta

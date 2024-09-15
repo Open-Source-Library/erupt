@@ -15,6 +15,7 @@ import xyz.erupt.annotation.sub_field.Edit;
 import xyz.erupt.annotation.sub_field.EditType;
 import xyz.erupt.core.exception.EruptAnnotationException;
 import xyz.erupt.core.module.EruptModuleInvoke;
+import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.toolkit.TimeRecorder;
 import xyz.erupt.core.util.EruptSpringUtil;
 import xyz.erupt.core.util.EruptUtil;
@@ -49,7 +50,15 @@ public class EruptCoreService implements ApplicationRunner {
     }
 
     public static EruptModel getErupt(String eruptName) {
-        return ERUPTS.get(eruptName);
+        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+            if (null == ERUPTS.get(eruptName)) {
+                return null;
+            } else {
+                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz());
+            }
+        } else {
+            return ERUPTS.get(eruptName);
+        }
     }
 
     //动态注册erupt类
@@ -120,6 +129,10 @@ public class EruptCoreService implements ApplicationRunner {
             int length = it.info().getName().length();
             if (length > moduleMaxCharLength.get()) moduleMaxCharLength.set(length);
         });
+//        if (eruptProp.isHotBuild()) {
+//            hotBuild = eruptProp.isHotBuild();
+//            log.info(ansi().fg(Ansi.Color.RED).a("Erupt Hot Build").reset().toString());
+//        }
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
@@ -127,8 +140,8 @@ public class EruptCoreService implements ApplicationRunner {
                     moduleMaxCharLength.get()), timeRecorder.recorder()
             );
         });
-        log.info("Erupt modules : " + MODULES.size());
-        log.info("Erupt classes : " + ERUPTS.size());
+        log.info("Erupt modules : {}", MODULES.size());
+        log.info("Erupt classes : {}", ERUPTS.size());
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
         log.info("<" + repeat("===", 20) + ">");
     }

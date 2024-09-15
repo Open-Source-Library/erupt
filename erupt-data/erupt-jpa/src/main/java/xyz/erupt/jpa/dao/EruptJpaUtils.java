@@ -43,11 +43,14 @@ public class EruptJpaUtils {
             if (null != field.getField().getAnnotation(OneToMany.class) || null != field.getField().getAnnotation(ManyToMany.class)) {
                 return;
             }
+            if (null == field.getField().getAnnotation(OneToOne.class) && field.getEruptField().edit().type() == EditType.COMBINE) {
+                return;
+            }
             if (null != field.getField().getAnnotation(Transient.class)) {
                 return;
             }
             for (View view : field.getEruptField().views()) {
-                if (view.column().length() == 0) {
+                if (view.column().isEmpty()) {
                     cols.add(eruptNameSymbol + field.getFieldName() + AS + field.getFieldName());
                 } else {
                     cols.add(eruptNameSymbol + field.getFieldName() + EruptConst.DOT + view.column() + AS + field.getFieldName() + "_"
@@ -145,9 +148,7 @@ public class EruptJpaUtils {
             }
         }
         for (Filter filter : eruptModel.getErupt().filter()) {
-            if (null != filter.value()) {
-                hql.append(AND).append(filter.value());
-            }
+            Optional.ofNullable(filter.value()).ifPresent(it -> hql.append(AND).append(it));
         }
         Optional.ofNullable(customCondition).ifPresent(it -> it.forEach(str -> {
             if (StringUtils.isNotBlank(str)) hql.append(EruptJpaUtils.AND).append(str);
