@@ -32,9 +32,6 @@ public class GsonFactory {
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
             .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
-            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> {
                 if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
                     return new JsonPrimitive((src).toString());
