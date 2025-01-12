@@ -8,7 +8,6 @@ import xyz.erupt.core.config.GsonFactory;
 import xyz.erupt.core.prop.EruptProp;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,22 +27,43 @@ public class EruptSessionService {
     private EruptProp eruptProp;
 
     @Resource
-    private HttpServletRequest request;
-
-    @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    private final Gson gson = GsonFactory.getGson();
+    @Resource
+    private EruptLocalSession eruptLocalSession;
 
-    public void put(String key, String str, long timeout) {
-        this.put(key, str, timeout, TimeUnit.MINUTES);
-    }
+    private final Gson gson = GsonFactory.getGson();
 
     public void put(String key, String str, long timeout, TimeUnit timeUnit) {
         if (eruptProp.isRedisSession()) {
             stringRedisTemplate.opsForValue().set(key, str, timeout, timeUnit);
         } else {
-            request.getSession().setAttribute(key, str);
+            eruptLocalSession.put(key, str, timeUnit.toMillis(timeout));
+        }
+    }
+
+    public Long increment(String key, long timeout, TimeUnit timeUnit) {
+        if (eruptProp.isRedisSession()) {
+            try {
+                return stringRedisTemplate.opsForValue().increment(key, 1);
+            } finally {
+                stringRedisTemplate.expire(key, timeout, timeUnit);
+            }
+        } else {
+            synchronized (this) {
+                Long num = (Long) eruptLocalSession.get(key);
+                if (null == num) num = 0L;
+                eruptLocalSession.put(key, ++num, timeUnit.toMillis(timeout));
+                return num;
+            }
+        }
+    }
+
+    public boolean exist(String key) {
+        if (eruptProp.isRedisSession()) {
+            return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
+        } else {
+            return null != eruptLocalSession.get(key);
         }
     }
 
@@ -51,14 +71,15 @@ public class EruptSessionService {
         if (eruptProp.isRedisSession()) {
             stringRedisTemplate.delete(key);
         } else {
-            request.getSession().removeAttribute(key);
+            eruptLocalSession.delete(key);
         }
     }
 
-    //延长key过期时间
-    public void expire(String key, long timeout, final TimeUnit unit) {
+    public void expire(String key, long timeout, TimeUnit unit) {
         if (eruptProp.isRedisSession()) {
             stringRedisTemplate.expire(key, timeout, unit);
+        } else {
+            eruptLocalSession.expire(key, unit.toMillis(timeout));
         }
     }
 
@@ -66,7 +87,7 @@ public class EruptSessionService {
         if (eruptProp.isRedisSession()) {
             return stringRedisTemplate.opsForValue().get(key);
         } else {
-            return request.getSession().getAttribute(key);
+            return eruptLocalSession.get(key);
         }
     }
 
@@ -78,28 +99,20 @@ public class EruptSessionService {
                 return gson.fromJson(this.get(key).toString(), type);
             }
         } else {
-            return gson.fromJson(request.getSession().getAttribute(key).toString(), type);
+            return gson.fromJson(eruptLocalSession.get(key).toString(), type);
         }
     }
 
-    public void putMap(String key, Map<String, Object> map, long expire) {
+    public void putMap(String key, Map<String, Object> map, long expire, TimeUnit timeUnit) {
         if (eruptProp.isRedisSession()) {
             BoundHashOperations<?, String, Object> boundHashOperations = stringRedisTemplate.boundHashOps(key);
             map.replaceAll((k, v) -> gson.toJson(v));
             boundHashOperations.putAll(map);
-            boundHashOperations.expire(expire, TimeUnit.MINUTES);
+            boundHashOperations.expire(expire, timeUnit);
         } else {
-            request.getSession().setAttribute(key, map);
+            eruptLocalSession.put(key, map, timeUnit.toMillis(expire));
         }
     }
-
-//    public <T> Map<String, T> getMap(String key, Class<T> type) {
-//        if (eruptProp.isRedisSession()) {
-//            return stringRedisTemplate.boundHashOps(key).entries();
-//        } else {
-//            return (Map<String, T>) request.getSession().getAttribute(key);
-//        }
-//    }
 
     //获取map的所有key
     public List<String> getMapKeys(String key) {
@@ -107,7 +120,7 @@ public class EruptSessionService {
             Set<Object> set = stringRedisTemplate.opsForHash().keys(key);
             return set.stream().map(Object::toString).collect(Collectors.toList());
         } else {
-            Map<String, Object> map = (Map<String, Object>) request.getSession().getAttribute(key);
+            Map<String, Object> map = (Map<String, Object>) eruptLocalSession.get(key);
             if (null == map) {
                 return null;
             }
@@ -123,7 +136,7 @@ public class EruptSessionService {
             }
             return gson.fromJson(obj.toString(), type);
         } else {
-            Map<String, T> map = (Map<String, T>) request.getSession().getAttribute(key);
+            Map<String, T> map = (Map<String, T>) eruptLocalSession.get(key);
             if (null == map) {
                 return null;
             }

@@ -17,4 +17,7 @@ public class EruptConst {
     public static final String DOT = ".";
 
     public static final String ERUPT_LOG = "erupt-log";
+
+    public static final String AN = "abcdef0123456789";
+
 }

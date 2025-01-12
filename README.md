@@ -30,8 +30,15 @@
 ---
 
 <p align="center">
-    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【分布式多维配置中心】</a> &nbsp; | &nbsp; 
-    <a href="https://www.yuque.com/erupts/erupt/sd27r9o1pex1s5xn">Erupt Flow 【工作流】</a>
+    <a href="https://www.yuque.com/erupts/erupt/ggbcv9">Erupt Cloud【分布式云配置】</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts/erupt/hstvzf">Erupt BI 【数据分析】</a> &nbsp; | &nbsp; 
+    <a href="https://www.yuque.com/erupts/erupt/xviwe9bimrmae26t">Erupt Tenant 【多租户】</a>
+</p>
+
+---
+
+<p align="center">
+    
 </p>
 
 ---
@@ -293,13 +300,7 @@ public class Simple extends BaseModel {
 <!--用户权限管理-->
 <dependency>
   <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-upms</artifactId>
-  <version>LATEST-VERSION</version>
-</dependency>
-<!--接口数据安全-->
-<dependency>
-  <groupId>xyz.erupt</groupId>
-  <artifactId>erupt-security</artifactId>
+  <artifactId>erupt-admin</artifactId>
   <version>LATEST-VERSION</version>
 </dependency>
 <!--后台WEB界面-->

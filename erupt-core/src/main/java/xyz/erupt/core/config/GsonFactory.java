@@ -1,10 +1,13 @@
 package xyz.erupt.core.config;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.MalformedJsonException;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.core.util.DateUtil;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +18,8 @@ import java.util.TimeZone;
  * @author YuePeng
  * date 2021/3/1 13:03
  */
-public class GsonFactory {
+@NoArgsConstructor
+public class GsonFactory implements ToNumberStrategy {
 
     public static final double JS_MAX_NUMBER = Math.pow(2, 53) - 1;
 
@@ -31,37 +35,57 @@ public class GsonFactory {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
-            .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
-//            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> {
-//                if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
-//                    return new JsonPrimitive((src).toString());
-//                } else {
-//                    return new JsonPrimitive(src);
-//                }
-//            })
-//            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> {
-//                if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
-//                    return new JsonPrimitive((src).toString());
-//                } else {
-//                    return new JsonPrimitive(src);
-//                }
-//            })
-//            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> {
-//                if (src.longValue() > JS_MAX_NUMBER || src.longValue() < JS_MIN_NUMBER) {
-//                    return new JsonPrimitive((src).toString());
-//                } else {
-//                    return new JsonPrimitive(src);
-//                }
-//            })
-            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> new JsonPrimitive(src.toString()))
+.registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
+            .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
+            .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
+            .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
+            .setObjectToNumberStrategy(new GsonFactory())
             .serializeNulls().setExclusionStrategies(new EruptGsonExclusionStrategies());
+
+    private static JsonPrimitive serializeSafeNumber(Number src) {
+        if (src.doubleValue() > JS_MAX_NUMBER || src.doubleValue() < JS_MIN_NUMBER) {
+            return new JsonPrimitive(src.toString());
+        } else {
+            return new JsonPrimitive(src);
+        }
+    }
+
+    private static JsonPrimitive serializeDoubleValue(Double src) {
+        if (src > JS_MAX_NUMBER || src < JS_MIN_NUMBER) {
+            return new JsonPrimitive(new BigDecimal(src).toPlainString());
+        }
+        if (Math.abs(src - src.longValue()) < Math.ulp(src)) {
+            return new JsonPrimitive(src.longValue());
+        } else {
+            return new JsonPrimitive(String.format("%.15g", src).replaceAll("\\.?0+$", ""));
+        }
+    }
 
     @Getter
     private static final Gson gson = gsonBuilder.create();
 
-    private GsonFactory() {
+    @Override
+    public Number readNumber(JsonReader in) throws IOException {
+        String value = in.nextString();
+        if (NumberUtils.isCreatable(value)) {
+            if (value.endsWith(".0")) {
+                value = value.substring(0, value.length() - 2);
+            }
+        }
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException var6) {
+            try {
+                Double d = Double.valueOf(value);
+                if ((d.isInfinite() || d.isNaN()) && !in.isLenient()) {
+                    throw new MalformedJsonException("JSON forbids NaN and infinities: " + d + "; at path " + in.getPreviousPath());
+                } else {
+                    return d;
+                }
+            } catch (NumberFormatException e) {
+                throw new JsonParseException("Cannot parse " + value + "; at path " + in.getPreviousPath(), e);
+            }
+        }
     }
 
     static class TimeZoneSerializer implements com.google.gson.JsonSerializer<TimeZone> {

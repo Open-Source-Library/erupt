@@ -2,6 +2,7 @@ package xyz.erupt.core.service;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.fusesource.jansi.Ansi;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -25,6 +26,8 @@ import xyz.erupt.core.view.EruptModel;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * @author YuePeng
@@ -54,7 +57,7 @@ public class EruptCoreService implements ApplicationRunner {
             if (null == ERUPTS.get(eruptName)) {
                 return null;
             } else {
-                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz());
+                return EruptCoreService.initEruptModel(ERUPTS.get(eruptName).getClazz(), false);
             }
         } else {
             return ERUPTS.get(eruptName);
@@ -66,7 +69,7 @@ public class EruptCoreService implements ApplicationRunner {
         if (ERUPTS.containsKey(eruptClazz.getSimpleName())) {
             throw new RuntimeException(eruptClazz.getSimpleName() + " conflict !");
         }
-        EruptModel eruptModel = initEruptModel(eruptClazz);
+        EruptModel eruptModel = initEruptModel(eruptClazz, true);
         ERUPTS.put(eruptClazz.getSimpleName(), eruptModel);
         ERUPT_LIST.add(eruptModel);
     }
@@ -82,8 +85,8 @@ public class EruptCoreService implements ApplicationRunner {
         EruptModel em = getErupt(eruptName).clone();
         for (EruptFieldModel fieldModel : em.getEruptFieldModels()) {
             Edit edit = fieldModel.getEruptField().edit();
-            if (edit.type() == EditType.CHOICE) {
-                fieldModel.setComponentValue(EruptUtil.getChoiceList(em, edit.choiceType()));
+            if (edit.type() == EditType.CHOICE || edit.type() == EditType.MULTI_CHOICE) {
+                fieldModel.setComponentValue(EruptUtil.getChoiceList(em, edit));
             } else if (edit.type() == EditType.TAGS) {
                 fieldModel.setComponentValue(EruptUtil.getTagList(edit.tagsType()));
             }
@@ -91,7 +94,7 @@ public class EruptCoreService implements ApplicationRunner {
         return em;
     }
 
-    private static EruptModel initEruptModel(Class<?> clazz) {
+    private static EruptModel initEruptModel(Class<?> clazz, boolean starting) {
         // erupt class data to memory
         EruptModel eruptModel = new EruptModel(clazz);
         // erupt field data to memory
@@ -99,7 +102,7 @@ public class EruptCoreService implements ApplicationRunner {
         eruptModel.setEruptFieldMap(new LinkedCaseInsensitiveMap<>());
         ReflectUtil.findClassAllFields(clazz, field -> Optional.ofNullable(field.getAnnotation(EruptField.class))
                 .ifPresent(ignore -> {
-                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field);
+                    EruptFieldModel eruptFieldModel = new EruptFieldModel(field, starting);
                     eruptModel.getEruptFieldModels().add(eruptFieldModel);
                     if (!eruptModel.getEruptFieldMap().containsKey(field.getName())) {
                         eruptModel.getEruptFieldMap().put(field.getName(), eruptFieldModel);
@@ -119,31 +122,30 @@ public class EruptCoreService implements ApplicationRunner {
         EruptSpringUtil.scannerPackage(EruptApplication.getScanPackage(), new TypeFilter[]{
                 new AnnotationTypeFilter(Erupt.class)
         }, clazz -> {
-            EruptModel eruptModel = initEruptModel(clazz);
+            EruptModel eruptModel = initEruptModel(clazz, true);
             ERUPTS.put(clazz.getSimpleName(), eruptModel);
             ERUPT_LIST.add(eruptModel);
         });
-        log.info("<" + repeat("===", 20) + ">");
+        log.info("<{}>", repeat("===", 18));
         AtomicInteger moduleMaxCharLength = new AtomicInteger();
         EruptModuleInvoke.invoke(it -> {
             int length = it.info().getName().length();
             if (length > moduleMaxCharLength.get()) moduleMaxCharLength.set(length);
         });
-//        if (eruptProp.isHotBuild()) {
-//            hotBuild = eruptProp.isHotBuild();
-//            log.info(ansi().fg(Ansi.Color.RED).a("Erupt Hot Build").reset().toString());
-//        }
+        if (EruptSpringUtil.getBean(EruptProp.class).isHotBuild()) {
+            log.warn(ansi().fg(Ansi.Color.RED).a("Open erupt hot build").reset().toString());
+        }
         EruptModuleInvoke.invoke(it -> {
             it.run();
             MODULES.add(it.info().getName());
-            log.info("🚀 -> {} module initialization completed in {}ms", fillCharacter(it.info().getName(),
+            log.info("🚀 → {} module initialization completed in {}ms", fillCharacter(it.info().getName(),
                     moduleMaxCharLength.get()), timeRecorder.recorder()
             );
         });
         log.info("Erupt modules : {}", MODULES.size());
         log.info("Erupt classes : {}", ERUPTS.size());
         log.info("Erupt Framework initialization completed in {}ms", totalRecorder.recorder());
-        log.info("<" + repeat("===", 20) + ">");
+        log.info("<{}>", repeat("===", 18));
     }
 
     private String fillCharacter(String character, int targetWidth) {
