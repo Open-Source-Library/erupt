@@ -1,5 +1,5 @@
 HELP.md
-target/
+*/target/*
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
@@ -29,4 +29,13 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 erupt-extra/erupt-flow.zip
+=======
+
+
+# project
+.erupt
+*/.DS_Store
+>>>>>>> erupt/develop
+**/target/**

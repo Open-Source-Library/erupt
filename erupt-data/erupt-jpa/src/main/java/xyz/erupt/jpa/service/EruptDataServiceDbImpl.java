@@ -29,7 +29,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.*;
@@ -65,7 +64,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         return eruptJpaDao.queryEruptList(eruptModel, page, query);
     }
 
-    @Transactional
     @Override
     public void addData(EruptModel eruptModel, Object data) {
         try {
@@ -73,6 +71,17 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
             this.jpaManyToOneConvert(eruptModel, data);
             eruptJpaDao.addEntity(eruptModel.getClazz(), data);
         } catch (Exception e) {
+            handlerException(e, eruptModel);
+        }
+    }
+
+    @Override
+    public void editData(EruptModel eruptModel, Object data) {
+        try {
+            this.loadSupport(data);
+            eruptJpaDao.editEntity(eruptModel.getClazz(), data);
+        } catch (Exception e) {
+
             handlerException(e, eruptModel);
         }
     }
@@ -96,17 +105,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         }
     }
 
-    @Transactional
-    @Override
-    public void editData(EruptModel eruptModel, Object data) {
-        try {
-            this.loadSupport(data);
-            eruptJpaDao.editEntity(eruptModel.getClazz(), data);
-        } catch (Exception e) {
-            handlerException(e, eruptModel);
-        }
-    }
-
     private void loadSupport(Object jpaEntity) {
         for (Field field : jpaEntity.getClass().getDeclaredFields()) {
             jpaSupport.referencedColumnNameSupport(jpaEntity, field);
@@ -119,9 +117,9 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         while (null != throwable) {
             throwable = throwable.getCause();
             if (throwable instanceof SQLException) {
-                if (throwable.getMessage().contains("Data too long")) {
+                if (throwable.getMessage().toLowerCase().contains("data too long")) {
                     throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.data.limit_length"));
-                } else if (throwable.getMessage().contains("Duplicate entry")) {
+                } else if (throwable.getMessage().toLowerCase().contains("duplicate")) {
                     throw new EruptWebApiRuntimeException(gcRepeatHint(eruptModel));
                 }
                 throw new EruptWebApiRuntimeException(throwable.getMessage());
@@ -130,7 +128,6 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
         throw new EruptWebApiRuntimeException(e);
     }
 
-    @Transactional
     @Override
     public void deleteData(EruptModel eruptModel, Object object) {
         try {

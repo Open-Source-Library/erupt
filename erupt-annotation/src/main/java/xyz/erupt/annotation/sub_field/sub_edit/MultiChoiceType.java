@@ -7,11 +7,11 @@ import java.beans.Transient;
 
 /**
  * @author YuePeng
- * date 2018-10-09.
+ * date 2025-01-19.
  */
 public @interface MultiChoiceType {
 
-    Type type() default Type.SELECT;
+    Type type() default Type.CHECKBOX;
 
     @Transient
     @Comment("手动配置选择项")
