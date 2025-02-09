@@ -3,8 +3,9 @@ package xyz.erupt.generator.base;
 import lombok.Getter;
 import xyz.erupt.annotation.sub_field.EditType;
 
-import javax.persistence.Lob;
-import javax.persistence.Transient;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -144,7 +145,7 @@ public enum GeneratorType {
             return CHECKBOX.importPackages();
         }
     },
-//    TPL(EditType.TPL, "自定义模板", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
+    //    TPL(EditType.TPL, "自定义模板", String.class.getSimpleName(), "tplType = @Tpl(path = \"/xxx.ftl\")") {
 //        @Override
 //        public String annotation(String thisErupt, String linkErupt) {
 //            return "@" + Transient.class.getSimpleName();

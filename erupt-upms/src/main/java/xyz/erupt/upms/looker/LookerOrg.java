@@ -21,9 +21,11 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.model.EruptUserPostVo;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import jakarta.annotation.Resource;
+
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+
 import java.util.Date;
 import java.util.List;
 

@@ -13,7 +13,7 @@ import xyz.erupt.monitor.constant.MonitorConstant;
 import xyz.erupt.monitor.vo.Platform;
 import xyz.erupt.monitor.vo.Server;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

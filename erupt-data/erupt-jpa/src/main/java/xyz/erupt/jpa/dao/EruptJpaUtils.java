@@ -1,5 +1,6 @@
 package xyz.erupt.jpa.dao;
 
+import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 import xyz.erupt.annotation.query.Condition;
 import xyz.erupt.annotation.sub_erupt.Filter;
@@ -12,7 +13,6 @@ import xyz.erupt.core.util.ReflectUtil;
 import xyz.erupt.core.view.EruptFieldModel;
 import xyz.erupt.core.view.EruptModel;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -92,14 +92,16 @@ public class EruptJpaUtils {
                     View[] views = model.getEruptField().views();
                     for (View v : views) {
                         String columnPath = v.column();
-                        if (columnPath.contains(EruptConst.DOT)) {
-                            String path = eruptModel.getEruptName() + EruptConst.DOT + field.getName() + EruptConst.DOT + columnPath.substring(0, columnPath.lastIndexOf(EruptConst.DOT));
-                            if (!pathSet.contains(path)) {
-                                hql.append(LEFT_JOIN).append(path);
-                                pathSet.add(path);
+                        if (hql.indexOf(field.getName()) < 1) {
+                            if (columnPath.contains(EruptConst.DOT)) {
+                                String path = eruptModel.getEruptName() + EruptConst.DOT + field.getName() + EruptConst.DOT + columnPath.substring(0, columnPath.lastIndexOf(EruptConst.DOT));
+                                if (!pathSet.contains(path)) {
+                                    hql.append(LEFT_JOIN).append(path);
+                                    pathSet.add(path);
+                                }
+                            } else {
+                                hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
                             }
-                        } else {
-                            hql.append(LEFT_JOIN).append(eruptModel.getEruptName()).append(EruptConst.DOT).append(field.getName()).append(AS).append(field.getName());
                         }
                     }
                 }

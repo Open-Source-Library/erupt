@@ -1,5 +1,10 @@
 package xyz.erupt.jpa.service;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -24,11 +29,6 @@ import xyz.erupt.jpa.dao.EruptJpaDao;
 import xyz.erupt.jpa.dao.EruptJpaUtils;
 import xyz.erupt.jpa.support.JpaSupport;
 
-import javax.annotation.Resource;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.*;
@@ -195,8 +195,10 @@ public class EruptDataServiceDbImpl implements IEruptDataService {
                 .append(") from ").append(eruptModel.getEruptName()).append(" as ").append(eruptModel.getEruptName());
         ReflectUtil.findClassAllFields(eruptModel.getClazz(), field -> {
             if (null != field.getAnnotation(ManyToOne.class) || null != field.getAnnotation(OneToOne.class)) {
-                hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
-                        .append(field.getName()).append(" as ").append(field.getName());
+                if (hql.indexOf(field.getName()) < 1) {
+                    hql.append(" left outer join ").append(eruptModel.getEruptName()).append(EruptConst.DOT)
+                            .append(field.getName()).append(" as ").append(field.getName());
+                }
             }
         });
         hql.append(" where 1 = 1 ");

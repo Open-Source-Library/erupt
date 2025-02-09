@@ -14,8 +14,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
-        <java.version>1.8</java.version>
-        <spring.boot.version>2.7.18</spring.boot.version>
+        <java.version>17</java.version>
+        <spring.boot.version>3.4.2</spring.boot.version>
     </properties>
 
     <!--
@@ -91,34 +91,34 @@
 
     <build>
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
-            <!--                <version>3.1</version>-->
-            <!--                <configuration>-->
-            <!--                    <source>${java.version}</source>-->
-            <!--                    <target>${java.version}</target>-->
-            <!--                    <encoding>utf-8</encoding>-->
-            <!--                    <verbose>true</verbose>-->
-            <!--                    <fork>true</fork>-->
-            <!--                    <compilerArgs>-->
-            <!--                        <compilerArg>-parameters</compilerArg>-->
-            <!--                    </compilerArgs>-->
-            <!--                    &lt;!&ndash;<executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>&ndash;&gt;-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
-            <!--            &lt;!&ndash; 一键更新子模块版本号 plugins -> versions -> version:set  &ndash;&gt;-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.codehaus.mojo</groupId>-->
-            <!--                <artifactId>versions-maven-plugin</artifactId>-->
-            <!--                <version>2.7</version>-->
-            <!--            </plugin>-->
-            <!--            &lt;!&ndash;SCM插件&ndash;&gt;-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-scm-plugin</artifactId>-->
-            <!--                <version>1.8.1</version>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>utf-8</encoding>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <compilerArg>-parameters</compilerArg>
+                    </compilerArgs>
+                    <!--<executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_231.jdk/Contents/Home/bin/javac</executable>-->
+                </configuration>
+            </plugin>
+            <!-- 一键更新子模块版本号 plugins -> versions -> version:set  -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <!--SCM插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.8.1</version>
+            </plugin>
         </plugins>
     </build>
 

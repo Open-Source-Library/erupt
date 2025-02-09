@@ -7,7 +7,8 @@ import xyz.erupt.tpl.annotation.EruptTpl;
 import xyz.erupt.tpl.annotation.TplAction;
 import xyz.erupt.upms.service.EruptContextService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.util.HashMap;
 import java.util.Map;
 

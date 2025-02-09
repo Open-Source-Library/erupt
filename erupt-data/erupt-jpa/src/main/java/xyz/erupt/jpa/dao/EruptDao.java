@@ -1,5 +1,11 @@
 package xyz.erupt.jpa.dao;
 
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,9 +14,6 @@ import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.jpa.service.EntityManagerService;
 
-import javax.annotation.Resource;
-import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +126,7 @@ public class EruptDao {
     }
 
     //不存在则新增
-    public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field, String val) throws NonUniqueResultException {
+    public <T> T persistIfNotExist(Class<T> eruptClass, T obj, String field, String val) {
         T t = (T) this.lambdaQuery(eruptClass).addCondition(field + " = :val", new HashMap<String, Object>(1) {{
             this.put("val", val);
         }}).one();
@@ -162,7 +165,7 @@ public class EruptDao {
     }
 
     @Deprecated
-    public Map<String, Object> queryMap(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
+    public Map<String, Object> queryMap(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         try {
             return (Map<String, Object>) simpleQuery(eruptClass, true, expr, param, cols).getSingleResult();
         } catch (NoResultException e) {
@@ -171,7 +174,7 @@ public class EruptDao {
     }
 
     @Deprecated
-    public Object[] queryObject(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) throws NonUniqueResultException {
+    public Object[] queryObject(Class<?> eruptClass, String expr, Map<String, Object> param, String... cols) {
         try {
             return (Object[]) simpleQuery(eruptClass, false, expr, param, cols).getSingleResult();
         } catch (NoResultException e) {
@@ -180,7 +183,7 @@ public class EruptDao {
     }
 
     @Deprecated
-    public <T> T queryEntity(Class<T> eruptClass, String expr, Map<String, Object> param) throws NonUniqueResultException {
+    public <T> T queryEntity(Class<T> eruptClass, String expr, Map<String, Object> param) {
         try {
             return (T) simpleQuery(eruptClass, false, expr, param).getSingleResult();
         } catch (NoResultException e) {

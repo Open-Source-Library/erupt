@@ -13,7 +13,8 @@ import xyz.erupt.core.prop.EruptProp;
 import xyz.erupt.core.util.DateUtil;
 import xyz.erupt.core.util.EruptUtil;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.io.File;
 import java.util.Date;
 
@@ -54,7 +55,7 @@ public class EruptFileService {
                 File dest = new File(eruptProp.getUploadPath() + path);
                 if (!dest.getParentFile().exists()) {
                     if (!dest.getParentFile().mkdirs()) {
-                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created")+ ": " + dest.getParentFile().getAbsolutePath());
+                        throw new EruptWebApiRuntimeException(I18nTranslate.$translate("erupt.upload_error.cannot_created") + ": " + dest.getParentFile().getAbsolutePath());
                     }
                 }
                 file.transferTo(dest);

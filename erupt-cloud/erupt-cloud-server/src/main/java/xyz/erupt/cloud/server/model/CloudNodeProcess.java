@@ -13,7 +13,8 @@ import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 import xyz.erupt.tpl.engine.EngineConst;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

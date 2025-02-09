@@ -8,7 +8,8 @@ import xyz.erupt.core.cache.EruptCache;
 import xyz.erupt.core.cache.EruptCacheLRU;
 import xyz.erupt.core.util.EruptAssert;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
