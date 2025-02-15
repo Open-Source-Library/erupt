@@ -14,8 +14,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <erupt.groupId>xyz.erupt</erupt.groupId>
-        <java.version>1.8</java.version>
-        <spring.boot.version>2.7.18</spring.boot.version>
+        <java.version>17</java.version>
+        <spring.boot.version>3.4.2</spring.boot.version>
     </properties>
 
     <!--
@@ -159,77 +159,77 @@
             </properties>
         </profile>
         <profile>
-            <id>release</id>
-            <dependencies>
-                <dependency>
-                    <groupId>javax.interceptor</groupId>
-                    <artifactId>javax.interceptor-api</artifactId>
-                    <version>1.2</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- Javadoc -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.0</version>
-                        <configuration>
-                            <additionalOptions>
-                                <additionalOption>-Xdoclint:none</additionalOption>
-                            </additionalOptions>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- GPG -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <!--            <id>release</id>-->
+            <!--            <dependencies>-->
+            <!--                <dependency>-->
+            <!--                    <groupId>javax.interceptor</groupId>-->
+            <!--                    <artifactId>javax.interceptor-api</artifactId>-->
+            <!--                    <version>1.2</version>-->
+            <!--                </dependency>-->
+            <!--            </dependencies>-->
+            <!--            <build>-->
+            <!--                <plugins>-->
+            <!--                    <plugin>-->
+            <!--                        <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                        <artifactId>maven-source-plugin</artifactId>-->
+            <!--                        <version>2.2.1</version>-->
+            <!--                        <executions>-->
+            <!--                            <execution>-->
+            <!--                                <id>attach-sources</id>-->
+            <!--                                <phase>package</phase>-->
+            <!--                                <goals>-->
+            <!--                                    <goal>jar-no-fork</goal>-->
+            <!--                                </goals>-->
+            <!--                            </execution>-->
+            <!--                        </executions>-->
+            <!--                    </plugin>-->
+            <!--                    &lt;!&ndash; Javadoc &ndash;&gt;-->
+            <!--                    <plugin>-->
+            <!--                        <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                        <artifactId>maven-javadoc-plugin</artifactId>-->
+            <!--                        <version>3.0.0</version>-->
+            <!--                        <configuration>-->
+            <!--                            <additionalOptions>-->
+            <!--                                <additionalOption>-Xdoclint:none</additionalOption>-->
+            <!--                            </additionalOptions>-->
+            <!--                        </configuration>-->
+            <!--                        <executions>-->
+            <!--                            <execution>-->
+            <!--                                <phase>package</phase>-->
+            <!--                                <goals>-->
+            <!--                                    <goal>jar</goal>-->
+            <!--                                </goals>-->
+            <!--                            </execution>-->
+            <!--                        </executions>-->
+            <!--                    </plugin>-->
+            <!--                    &lt;!&ndash; GPG &ndash;&gt;-->
+            <!--                    <plugin>-->
+            <!--                        <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                        <artifactId>maven-gpg-plugin</artifactId>-->
+            <!--                        <version>1.6</version>-->
+            <!--                        <executions>-->
+            <!--                            <execution>-->
+            <!--                                <id>sign-artifacts</id>-->
+            <!--                                <phase>verify</phase>-->
+            <!--                                <goals>-->
+            <!--                                    <goal>sign</goal>-->
+            <!--                                </goals>-->
+            <!--                            </execution>-->
+            <!--                        </executions>-->
+            <!--                    </plugin>-->
+            <!--                </plugins>-->
+            <!--            </build>-->
 
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>erupt</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>erupt</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
+            <!--            <distributionManagement>-->
+            <!--                <snapshotRepository>-->
+            <!--                    <id>erupt</id>-->
+            <!--                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+            <!--                </snapshotRepository>-->
+            <!--                <repository>-->
+            <!--                    <id>erupt</id>-->
+            <!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+            <!--                </repository>-->
+            <!--            </distributionManagement>-->
         </profile>
     </profiles>
 </project>

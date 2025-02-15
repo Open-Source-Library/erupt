@@ -1,5 +1,6 @@
 package xyz.erupt.upms.controller;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -15,7 +16,6 @@ import xyz.erupt.upms.model.EruptOpenApi;
 import xyz.erupt.upms.service.EruptTokenService;
 import xyz.erupt.upms.vo.OpenApiTokenVo;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 /**

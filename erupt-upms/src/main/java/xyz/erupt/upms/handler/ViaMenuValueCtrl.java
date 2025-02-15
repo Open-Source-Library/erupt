@@ -6,7 +6,7 @@ import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.core.util.EruptAssert;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng
@@ -22,7 +22,7 @@ public class ViaMenuValueCtrl implements ExprBool.ExprHandler {
     @Override
     @Comment("params必填，值为菜单类型值")
     public boolean handler(boolean expr, String[] params) {
-        EruptAssert.notNull(params,ViaMenuValueCtrl.class.getSimpleName() + " → params[0] not found");
+        EruptAssert.notNull(params, ViaMenuValueCtrl.class.getSimpleName() + " → params[0] not found");
         return null != eruptUserService.getEruptMenuByValue(params[0]);
     }
 

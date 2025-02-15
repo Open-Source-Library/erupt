@@ -11,8 +11,10 @@ import xyz.erupt.job.model.EruptJob;
 import xyz.erupt.job.service.EruptJobService;
 import xyz.erupt.jpa.dao.EruptDao;
 
-import javax.annotation.Resource;
-import javax.persistence.Transient;
+import jakarta.annotation.Resource;
+
+import jakarta.persistence.Transient;
+
 import java.text.ParseException;
 import java.util.List;
 

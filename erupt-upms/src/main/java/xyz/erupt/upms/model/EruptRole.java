@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -16,7 +17,6 @@ import xyz.erupt.upms.handler.RoleMenuFilter;
 import xyz.erupt.upms.helper.HyperModelUpdateVo;
 import xyz.erupt.upms.model.data_proxy.EruptRoleDataProxy;
 
-import javax.persistence.*;
 import java.util.Set;
 
 /**

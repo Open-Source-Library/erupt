@@ -1,5 +1,6 @@
 package xyz.erupt.upms.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
@@ -24,7 +25,6 @@ import xyz.erupt.upms.model.filter.EruptMenuViewFilter;
 import xyz.erupt.upms.model.input.ResetPassword;
 import xyz.erupt.upms.model.input.ResetPasswordExec;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -209,13 +209,13 @@ public class EruptUser extends LookerSelf {
         this.setId(id);
     }
 
-    public MetaUserinfo toMetaUser(){
+    public MetaUserinfo toMetaUser() {
         MetaUserinfo metaUserinfo = new MetaUserinfo();
         metaUserinfo.setId(this.getId());
         metaUserinfo.setSuperAdmin(this.getIsAdmin());
         metaUserinfo.setAccount(this.getAccount());
         metaUserinfo.setUsername(this.getName());
-        Optional.ofNullable(this.getRoles()).ifPresent(it-> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
+        Optional.ofNullable(this.getRoles()).ifPresent(it -> metaUserinfo.setRoles(it.stream().map(EruptRole::getCode).collect(Collectors.toList())));
         Optional.ofNullable(this.getEruptPost()).ifPresent(it -> metaUserinfo.setPost(it.getCode()));
         Optional.ofNullable(this.getEruptOrg()).ifPresent(it -> metaUserinfo.setOrg(it.getCode()));
         return metaUserinfo;

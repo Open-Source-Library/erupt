@@ -10,7 +10,7 @@ import xyz.erupt.security.interceptor.EruptSecurityInterceptor;
 import xyz.erupt.security.interceptor.EruptSuperInterceptor;
 import xyz.erupt.security.interceptor.HttpServletRequestFilter;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

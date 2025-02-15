@@ -9,10 +9,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 import xyz.erupt.core.util.DateUtil;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 /**
  * @author YuePeng
@@ -35,6 +37,7 @@ public class GsonFactory implements ToNumberStrategy {
                     -> LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE_TIME)))
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext)
                     -> LocalDate.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern(DateUtil.DATE)))
+            .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
             .registerTypeAdapter(Long.class, (JsonSerializer<Long>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
             .registerTypeAdapter(Double.class, (JsonSerializer<Double>) (src, type, jsonSerializationContext) -> serializeDoubleValue(src))
             .registerTypeAdapter(BigDecimal.class, (JsonSerializer<BigDecimal>) (src, type, jsonSerializationContext) -> serializeSafeNumber(src))
@@ -84,6 +87,15 @@ public class GsonFactory implements ToNumberStrategy {
             } catch (NumberFormatException e) {
                 throw new JsonParseException("Cannot parse " + value + "; at path " + in.getPreviousPath(), e);
             }
+        }
+    }
+
+    static class TimeZoneSerializer implements com.google.gson.JsonSerializer<TimeZone> {
+        @Override
+        public JsonObject serialize(TimeZone src, Type typeOfSrc, com.google.gson.JsonSerializationContext context) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", src.getID());
+            return jsonObject;
         }
     }
 }

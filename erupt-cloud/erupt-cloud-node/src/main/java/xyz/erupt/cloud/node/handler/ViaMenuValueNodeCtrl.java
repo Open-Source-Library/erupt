@@ -5,7 +5,7 @@ import xyz.erupt.annotation.expr.ExprBool;
 import xyz.erupt.cloud.node.service.ServerRemoteService;
 import xyz.erupt.core.context.MetaContext;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author YuePeng

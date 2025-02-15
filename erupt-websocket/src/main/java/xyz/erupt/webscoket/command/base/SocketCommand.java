@@ -1,6 +1,7 @@
 package xyz.erupt.webscoket.command.base;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public abstract class SocketCommand<T> {
 
-    public static  Map<String, SocketCommand<?>> socketCommandMap = new HashMap<>();
+    public static Map<String, SocketCommand<?>> socketCommandMap = new HashMap<>();
     public Class<?> type;
 
     public SocketCommand() {

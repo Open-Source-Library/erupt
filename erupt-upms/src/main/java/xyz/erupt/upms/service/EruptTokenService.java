@@ -13,7 +13,8 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.vo.EruptMenuVo;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 

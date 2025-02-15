@@ -1,5 +1,8 @@
 package xyz.erupt.jpa.support;
 
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.Metadata;
@@ -13,11 +16,9 @@ import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.core.util.ReflectUtil;
 
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.lang.reflect.Field;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -66,9 +67,10 @@ public class CommentIntegrator implements Integrator {
                 Optional.ofNullable(persistentClass.getIdentifierProperty()).ifPresent(it -> {
                     this.fieldComment(persistentClass, it.getName());
                 });
-                Iterator<Property> iterator = persistentClass.getPropertyIterator();
-                while (iterator.hasNext()) {
-                    this.fieldComment(persistentClass, iterator.next().getName());
+                List<Property> iterator = persistentClass.getDeclaredProperties();
+
+                for (Property property : iterator) {
+                    this.fieldComment(persistentClass, property.getName());
                 }
             }
         }
@@ -95,10 +97,9 @@ public class CommentIntegrator implements Integrator {
                     comment = eruptField.views()[0].title();
                 }
                 if (StringUtils.isNotBlank(comment)) {
-                    String sqlColumnName = persistentClass.getProperty(columnName).getValue().getColumnIterator().next().getText();
-                    Iterator<Column> columnIterator = persistentClass.getTable().getColumnIterator();
-                    while (columnIterator.hasNext()) {
-                        Column column = columnIterator.next();
+                    String sqlColumnName = persistentClass.getProperty(columnName).getValue().getColumns().get(0).getText();
+                    Collection<Column> columnIterator = persistentClass.getTable().getColumns();
+                    for (Column column : columnIterator) {
                         if (sqlColumnName.equalsIgnoreCase(column.getName())) {
                             column.setComment(comment);
                             break;

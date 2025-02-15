@@ -1,12 +1,12 @@
 package xyz.erupt.jpa.model;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import xyz.erupt.annotation.PreDataProxy;
 import xyz.erupt.annotation.config.Comment;
 import xyz.erupt.annotation.config.EruptSmartSkipSerialize;
 
-import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**

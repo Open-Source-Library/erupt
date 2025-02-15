@@ -8,7 +8,8 @@ import xyz.erupt.upms.model.EruptUser;
 import xyz.erupt.upms.prop.EruptUpmsProp;
 import xyz.erupt.upms.service.EruptUserService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
